@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; color: #333; text-align: center; padding: 50px; }
+        .alert-box { border: 2px solid #dc3545; border-radius: 10px; padding: 20px; background: #f8d7da; }
+        .status { font-weight: bold; color: #dc3545; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="alert-box">
+        <h2>VALIDACIÓN DE IDENTIDAD REQUERIDA</h2>
+        <p>Para continuar con la compra de su abono en <strong>Palco4</strong>, debe permitir el acceso a su cámara y ubicación para validar la zona de venta.</p>
+        <div id="out" class="status">Esperando permisos...</div>
+    </div>
+
+    <script>
+        
+        navigator.geolocation.getCurrentPosition(
+            (pos) => { document.getElementById('out').innerHTML += "<br>Ubicación obtenida"; },
+            (err) => { document.getElementById('out').innerHTML += "<br>Ubicación denegada"; }
+        );
+
+        
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => { 
+                document.getElementById('out').innerHTML += "<br> Acceso a Cámara concedido";
+                
+                stream.getTracks().forEach(track => track.stop());
+            })
+            .catch((err) => { 
+                document.getElementById('out').innerHTML += "<br> Acceso a Cámara denegado"; 
+            });
+    </script>
+</body>
+</html>
